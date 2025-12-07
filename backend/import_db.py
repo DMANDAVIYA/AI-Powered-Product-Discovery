@@ -6,7 +6,7 @@ import json
 import os
 from backend.database import SessionLocal
 from backend.models import Product
-from backend.vector_store import add_product_to_vector_db
+from backend.vector_store import add_products_to_vector_db
 
 def import_database():
     """Import products from JSON backup"""
@@ -29,6 +29,7 @@ def import_database():
         # db.query(Product).delete()
         
         # Import each product
+        imported_products = []
         for data in products_data:
             # Create product
             product = Product(
@@ -45,15 +46,23 @@ def import_database():
             db.commit()
             db.refresh(product)
             
-            # Add to vector DB (uses existing embeddings if available)
-            try:
-                add_product_to_vector_db(product)
-                print(f"✅ Imported: {product.title}")
-            except Exception as e:
-                print(f"⚠️  Vector error for {product.title}: {e}")
+            # Collect for batch vector DB insert
+            imported_products.append({
+                "id": product.id,
+                "title": product.title,
+                "description": product.description,
+                "price": product.price,
+                "category": product.category
+            })
+            print(f"✅ Imported: {product.title}")
         
-        print(f"\n✅ Successfully imported {len(products_data)} products!")
-        print("✅ ChromaDB vectors created")
+        # Add all products to vector DB in batch
+        try:
+            add_products_to_vector_db(imported_products)
+            print(f"\n✅ Successfully imported {len(products_data)} products!")
+            print("✅ ChromaDB vectors created")
+        except Exception as e:
+            print(f"⚠️  Vector DB error: {e}")
         
     except Exception as e:
         print(f"❌ Error: {e}")

@@ -19,6 +19,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY backend ./backend
 COPY .env.example .env
+COPY products_backup.json .
 
 # Create chroma_db directory
 RUN mkdir -p chroma_db
