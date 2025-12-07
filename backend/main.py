@@ -73,6 +73,16 @@ def trigger_scrape():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/import-backup")
+def import_backup():
+    """Import products from JSON backup file"""
+    try:
+        from .import_db import import_database
+        import_database()
+        return {"message": "Database import completed successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/products", response_model=List[ProductResponse])
 def get_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     products = db.query(Product).offset(skip).limit(limit).all()

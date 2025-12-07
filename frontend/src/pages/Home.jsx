@@ -4,7 +4,7 @@ import axios from 'axios'
 import ChatInterface from '../components/ChatInterface'
 import './Home.css'
 
-const API_URL = 'http://127.0.0.1:8000'
+const API_URL = 'https://neusearch-backend-x9lv.onrender.com'
 
 function Home() {
     const [products, setProducts] = useState([])

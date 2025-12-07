@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import './ChatInterface.css'
 
-const API_URL = 'http://127.0.0.1:8000'
+const API_URL = 'https://neusearch-backend-x9lv.onrender.com'
 
 function ChatInterface() {
     const [messages, setMessages] = useState([
