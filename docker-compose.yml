@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: neusearch_user
+      POSTGRES_PASSWORD: neusearch_pass
+      POSTGRES_DB: neusearch
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://neusearch_user:neusearch_pass@db:5432/neusearch
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+    depends_on:
+      - db
+    volumes:
+      - ./chroma_db:/app/chroma_db
+
+volumes:
+  postgres_data:

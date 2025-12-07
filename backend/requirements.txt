@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+pgvector
+python-dotenv
+firecrawl-py
+openai
+pydantic
+pydantic-settings
+alembic
+requests
+beautifulsoup4
+tenacity
