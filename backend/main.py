@@ -9,8 +9,8 @@ from .models import Product
 from .scraper import scrape_hunnit
 from .rag import chat_with_products
 
-# Initialize DB (can also be done via init_db.py)
-# Base.metadata.create_all(bind=engine)
+# Initialize DB tables on startup
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Neusearch AI API")
 
@@ -70,6 +70,15 @@ def trigger_scrape():
     try:
         scrape_hunnit()
         return {"message": "Scraping completed successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/init-db")
+def initialize_database():
+    """Create database tables"""
+    try:
+        Base.metadata.create_all(bind=engine)
+        return {"message": "Database tables created successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
